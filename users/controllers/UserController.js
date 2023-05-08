@@ -67,6 +67,30 @@ module.exports = {
           status: false,
           error: err,
         });
+      });
+  },
+
+  changeRole: (req, res) => {
+    const {
+      params: { userId },
+      body: { role },
+    } = req;
+
+    UserModel.updateUser({ id: userId }, { role })
+      .then(() => {
+        return UserModel.findUser({ id: userId });
       })
-  }
+      .then((user) => {
+        return res.status(200).json({
+          status: true,
+          data: user.toJSON(),
+        });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          status: false,
+          error: err,
+        });
+      });
+  },
 };
