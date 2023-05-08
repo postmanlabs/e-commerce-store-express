@@ -1,69 +1,77 @@
 const { DataTypes } = require("sequelize");
-const { roles } = require("../../config");
+const { productPriceUnits } = require("../../config");
 
-const UserModel = {
+const ProductModel = {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  username: {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
+  image: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  age: {
+  price: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  role: {
+  priceUnit: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: roles.USER
+    defaultValue: productPriceUnits.DOLLAR,
   },
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  lastName: {
-    type: DataTypes.STRING,
-    allowNull: false
-  }
 };
 
 module.exports = {
   initialise: (sequelize) => {
-    this.model = sequelize.define("user", UserModel);
+    this.model = sequelize.define("product", ProductModel)
   },
 
-  createUser: (user) => {
+  createProduct: (user) => {
     return this.model.create(user);
   },
 
-  findUser: (query) => {
+  findProduct: (query) => {
     return this.model.findOne({
       where: query,
     });
   },
 
-  updateUser: (query, updatedValue) => {
+  updateProduct: (query, updatedValue) => {
     return this.model.update(updatedValue, {
       where: query,
     });
   },
 
-  findAllUsers: (query) => {
+  findAllProducts: (query) => {
     return this.model.findAll({
       where: query
     });
+  },
+
+  deleteProduct: (query) => {
+    let foundProduct;
+    return this.findProduct(query)
+      .then(product => {
+        foundProduct = product;
+
+        if (!product) {
+          return Promise.resolve();
+        }
+
+        return product.destroy()
+      })
+      .then(() => {
+        return Promise.resolve(foundProduct);
+      });
   }
-};
+}
