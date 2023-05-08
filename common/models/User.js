@@ -52,4 +52,10 @@ module.exports = {
       where: query,
     });
   },
+
+  findAllUsers: (query) => {
+    return this.model.findAll({
+      where: query
+    });
+  }
 };
