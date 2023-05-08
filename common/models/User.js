@@ -30,6 +30,14 @@ const UserModel = {
     allowNull: false,
     defaultValue: roles.USER
   },
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
 };
 
 module.exports = {

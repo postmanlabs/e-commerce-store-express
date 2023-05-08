@@ -30,21 +30,22 @@ const encryptPassword = (password) => {
 
 module.exports = {
   register: (req, res) => {
-    const { username, email, password, age, role = roles.USER } = req.body;
+    const payload = req.body;
 
-    const encryptedPassword = encryptPassword(password);
+    let encryptedPassword = encryptPassword(payload.password);
+    let role = payload.role;
 
-    UserModel.createUser({
-      username,
-      email,
-      password: encryptedPassword,
-      age,
-      role,
-    })
+    if (!role) {
+      role = roles.USER;
+    }
+
+    UserModel.createUser(
+      Object.assign(payload, { password: encryptedPassword, role })
+    )
       .then((user) => {
         // Generating an AccessToken for the user, which will be
         // required in every subsequent request.
-        const accessToken = generateAccessToken(username, user.id);
+        const accessToken = generateAccessToken(payload.username, user.id);
 
         return res.status(200).json({
           status: true,

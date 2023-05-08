@@ -16,6 +16,12 @@ module.exports = {
     age: {
       type: 'number'
     },
+    firstName: {
+      type: 'string'
+    },
+    lastName: {
+      type: 'string'
+    },
     role: {
       type: 'string',
       enum: Object.values(roles)
@@ -25,7 +31,9 @@ module.exports = {
     'username',
     'email',
     'password',
-    'age'
+    'age',
+    'firstName',
+    'lastName'
   ],
   additionalProperties: false
 };

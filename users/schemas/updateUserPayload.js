@@ -3,6 +3,12 @@ module.exports = {
   properties: {
     age: {
       type: 'number'
+    },
+    firstName: {
+      type: 'string'
+    },
+    lastName: {
+      type: 'string'
     }
   },
   additionalProperties: false
