@@ -5,6 +5,7 @@ const UserModel = require("../../common/models/User");
 
 const { roles, jwtSecret, jwtExpirationInSeconds } = require("../../config");
 
+// Generates an Access Token using username and userId for the user's authentication
 const generateAccessToken = (username, userId) => {
   return jwt.sign(
     {
@@ -18,6 +19,7 @@ const generateAccessToken = (username, userId) => {
   );
 };
 
+// Encrypts the password using SHA256 Algorithm, for enhanced security of the password
 const encryptPassword = (password) => {
   // We will hash the password using SHA256 Algorithm before storing in the DB
   // Creating SHA-256 hash object

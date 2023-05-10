@@ -27,6 +27,8 @@ module.exports = {
       body: payload,
     } = req;
 
+    // IF the payload does not have any keys,
+    // THEN we can return an error, as nothing can be updated
     if (!Object.keys(payload).length) {
       return res.status(400).json({
         status: false,
