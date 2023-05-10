@@ -12,7 +12,7 @@ module.exports = {
       type: "string",
     },
     price: {
-      type: "string",
+      type: "number",
     },
     priceUnit: {
       type: "string",

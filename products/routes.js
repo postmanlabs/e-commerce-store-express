@@ -36,7 +36,7 @@ router.post(
 );
 
 router.patch(
-  "/",
+  "/:productId",
   [
     isAuthenticatedMiddleware.check,
     CheckPermissionMiddleware.has(roles.ADMIN),
