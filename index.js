@@ -1,6 +1,7 @@
 const Express = require("express");
 const app = Express();
 const cors = require("cors");
+const morgan = require("morgan");
 const { Sequelize } = require("sequelize");
 
 const { port } = require("./config");
@@ -15,6 +16,7 @@ const ProductRoutes = require("./products/routes");
 const UserModel = require("./common/models/User");
 const ProductModel = require("./common/models/Product");
 
+app.use(morgan("tiny"));
 app.use(cors());
 
 // Middleware that parses the body payloads as JSON to be consumed next set
