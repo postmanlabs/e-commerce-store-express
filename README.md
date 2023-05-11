@@ -1,7 +1,7 @@
-# E-Commerce Service
+# E-Commerce Store with NodeJS
 
 This is an Express service that provides authorization functionality and includes separate folders for users and products.
-It also uses the Sequelize ORM with SQLite as the database, along with the JSON Web Token (JWT) and AJV libraries.
+It also uses Sequelize ORM with SQLite as the database, along with the JSON Web Token (JWT) and AJV libraries.
 
 ## Project Structure
  - `index.js`: The main entry point of the application.
