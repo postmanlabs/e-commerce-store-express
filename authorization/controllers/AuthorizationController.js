@@ -51,7 +51,7 @@ module.exports = {
 
         return res.status(200).json({
           status: true,
-          result: {
+          data: {
             user: user.toJSON(),
             token: accessToken,
           },
@@ -100,7 +100,7 @@ module.exports = {
 
         return res.status(200).json({
           status: true,
-          result: {
+          data: {
             user: user.toJSON(),
             token: accessToken,
           },
