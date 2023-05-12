@@ -56,8 +56,30 @@ module.exports = {
       });
   },
 
+  deleteUser: (req, res) => {
+    const {
+      params: { userId },
+    } = req;
+
+    UserModel.deleteUser({ id: userId })
+      .then((numberOfEntriesDeleted) => {
+        return res.status(200).json({
+          status: true,
+          data: {
+            numberOfUsersDeleted: numberOfEntriesDeleted
+          },
+        });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          status: false,
+          error: err,
+        });
+      });
+  },
+
   getAllUsers: (req, res) => {
-    UserModel.findAllUsers({})
+    UserModel.findAllUsers(req.query)
       .then((users) => {
         return res.status(200).json({
           status: true,

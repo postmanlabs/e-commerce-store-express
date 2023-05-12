@@ -65,5 +65,11 @@ module.exports = {
     return this.model.findAll({
       where: query
     });
+  },
+
+  deleteUser: (query) => {
+    return this.model.destroy({
+      where: query
+    });
   }
 };

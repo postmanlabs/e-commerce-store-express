@@ -41,4 +41,10 @@ router.patch(
   UserController.changeRole
 );
 
+router.delete(
+  "/:userId",
+  [isAuthenticatedMiddleware.check, CheckPermissionMiddleware.has(roles.ADMIN)],
+  UserController.deleteUser
+);
+
 module.exports = router;
