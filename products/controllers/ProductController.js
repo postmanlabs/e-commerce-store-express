@@ -91,4 +91,26 @@ module.exports = {
         });
       });
   },
+
+  deleteProduct: (req, res) => {
+    const {
+      params: { productId },
+    } = req;
+
+    ProductModel.deleteProduct({id: productId})
+      .then((numberOfEntriesDeleted) => {
+        return res.status(200).json({
+          status: true,
+          data: {
+            numberOfProductsDeleted: numberOfEntriesDeleted
+          },
+        });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          status: false,
+          error: err,
+        });
+      });
+  },
 };

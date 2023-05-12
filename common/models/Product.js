@@ -13,8 +13,7 @@ const ProductModel = {
   },
   description: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+    allowNull: false
   },
   image: {
     type: DataTypes.STRING,
@@ -59,19 +58,8 @@ module.exports = {
   },
 
   deleteProduct: (query) => {
-    let foundProduct;
-    return this.findProduct(query)
-      .then(product => {
-        foundProduct = product;
-
-        if (!product) {
-          return Promise.resolve();
-        }
-
-        return product.destroy()
-      })
-      .then(() => {
-        return Promise.resolve(foundProduct);
-      });
+    return this.model.destroy({
+      where: query
+    });
   }
 }

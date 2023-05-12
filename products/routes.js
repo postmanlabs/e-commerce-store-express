@@ -45,4 +45,10 @@ router.patch(
   ProductController.updateProduct
 );
 
+router.delete(
+  "/:productId",
+  [isAuthenticatedMiddleware.check, CheckPermissionMiddleware.has(roles.ADMIN)],
+  ProductController.deleteProduct
+);
+
 module.exports = router;
