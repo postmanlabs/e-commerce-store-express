@@ -1,53 +1,72 @@
-const Express = require("express");
-const app = Express();
-const cors = require("cors");
-const morgan = require("morgan");
-const { Sequelize } = require("sequelize");
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import { Sequelize } from "sequelize";
 
-const { port } = require("./config");
-const PORT = process.env.PORT || port;
-
+import { port, databaseFilePath } from "./config.js";
 // Express Routes Import
-const AuthorizationRoutes = require("./authorization/routes");
-const UserRoutes = require("./users/routes");
-const ProductRoutes = require("./products/routes");
-
+import AuthorizationRoutes from "./authorization/routes.js";
+import UserRoutes from "./users/routes.js";
+import ProductRoutes from "./products/routes.js";
 // Sequelize model imports
-const UserModel = require("./common/models/User");
-const ProductModel = require("./common/models/Product");
+import UserModel from "./common/models/User.js";
+import ProductModel from "./common/models/Product.js";
+
+const app = express();
+const PORT = process.env.PORT || port;
 
 app.use(morgan("tiny"));
 app.use(cors());
-
 // Middleware that parses the body payloads as JSON to be consumed next set
 // of middlewares and controllers.
-app.use(Express.json());
+app.use(express.json());
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: "./storage/data.db", // Path to the file that will store the SQLite DB.
+  storage: databaseFilePath, // Path to the file that will store the SQLite DB.
 });
 
-// Initialising the Model on sequelize
-UserModel.initialise(sequelize);
-ProductModel.initialise(sequelize);
+const initializeModels = async () => {
+  // Initialising the Model on sequelize
+  await UserModel.initialize(sequelize);
+  await ProductModel.initialize(sequelize);
+};
 
+const initializeRoutes = () => {
+  // Intialising the routes
+  app.use("/", AuthorizationRoutes);
+  app.use("/user", UserRoutes);
+  app.use("/product", ProductRoutes);
+};
+
+// server initilization
+const startServer = () => {
+  app.listen(PORT, () => {
+    console.log(`Server listening on PORT:${PORT}`);
+  });
+};
 // Syncing the models that are defined on sequelize with the tables that alredy exists
 // in the database. It creates models as tables that do not exist in the DB.
 sequelize
   .sync()
   .then(() => {
-    console.log("Sequelize Initialised!!");
-
-    // Attaching the Authentication and User Routes to the app.
-    app.use("/", AuthorizationRoutes);
-    app.use("/user", UserRoutes);
-    app.use("/product", ProductRoutes);
-
-    app.listen(PORT, () => {
-      console.log("Server Listening on PORT:", port);
-    });
+    console.log("Sequelize initialized!");
+    // Attaching the Model and User Routes to the app.
+    initializeModels();
+    initializeRoutes();
+    startServer();
   })
   .catch((err) => {
-    console.error("Sequelize Initialisation threw an error:", err);
+    console.error("Sequelize initialization error:", err);
+    process.exit(1);
   });
+
+process.on("unhandledRejection", (err) => {
+  console.error("UnhandledRejection error:", err);
+  process.exit(1);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("UncaughtException error:", err);
+  process.exit(1);
+});
