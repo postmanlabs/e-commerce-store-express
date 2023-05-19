@@ -1,35 +1,42 @@
 const UserModel = require("../models/User");
 
 module.exports = {
+  // Middleware function that checks if the user has the required role.
   has: (role) => {
-    return (req, res, next) => {
-      const {
-        user: { userId },
-      } = req;
+    return async (req, res, next) => {
+      try {
+        const { userId } = req.user;
 
-      UserModel.findUser({ id: userId }).then((user) => {
-        // IF user does not exist in our database, means something is fishy
-        // THEN we will return forbidden error and ask user to login again
+        // Find the user in the database.
+        const user = await UserModel.findUser({ id: userId });
+
+        // If the user does not exist in our database, return an error and ask them to login again.
         if (!user) {
-          return res.status(403).json({
-            status: false,
-            error: "Invalid access token provided, please login again.",
+          return res.status(401).json({
+            success: false,
+            message: "Invalid access token provided. Please log in again.",
           });
         }
 
         const userRole = user.role;
 
-        // IF user does not possess the required role
-        // THEN return forbidden error
+        // If the user does not possess the required role, return an error.
         if (userRole !== role) {
           return res.status(403).json({
-            status: false,
-            error: `You need to be a ${role} to access this endpoint.`,
+            success: false,
+            message: `You need to be a ${role} to access this endpoint.`,
           });
         }
 
+        // Otherwise, continue to the next middleware.
         next();
-      });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({
+          success: false,
+          message: "An unexpected error occurred. Please try again later.",
+        });
+      }
     };
   },
 };
